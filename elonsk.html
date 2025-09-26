@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WHATSAPP UNBANNE TOOL</title>
+<style>
+  body {margin:0;font-family:'Segoe UI',Tahoma,sans-serif;background:radial-gradient(circle,#001133,#000);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+  /* LOGIN PAGE */
+  #login-overlay { position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7); display:flex;justify-content:center;align-items:center;z-index:1000;flex-direction:column;text-align:center;backdrop-filter:blur(8px); }
+  #login-box { background:rgba(255,255,255,0.08);backdrop-filter:blur(15px);border-radius:20px;padding:40px;width:90%;max-width:400px; box-shadow:0 0 30px #00ccff;border:1px solid rgba(0,204,255,0.4); }
+  #login-box h1 {color:#00ccff;text-shadow:0 0 15px #00ccff;margin-bottom:20px;}
+  #login-box input {width:100%;padding:12px;margin:10px 0;border-radius:10px;border:none;text-align:center;font-size:16px;background:rgba(0,40,80,0.6);color:#00ccff;box-shadow:inset 0 0 10px #00ccff;outline:none;}
+  #login-box button {width:100%;padding:12px;margin-top:10px;border:none;border-radius:10px;background:linear-gradient(90deg,#004080,#0099ff,#00ccff);color:#fff;font-weight:bold;cursor:pointer;box-shadow:0 0 15px #00ccff;transition:0.3s;}
+  #login-box button:hover {background:linear-gradient(90deg,#00ccff,#0099ff,#004080);box-shadow:0 0 25px #00ffff;}
+  #error {color:red;margin-top:10px;font-size:14px;min-height:18px;}
+  #login-box a img {width:40px;height:40px;margin-top:10px;}
+
+  /* MAIN PAGE */
+  #main-page {display:none;width:100%;flex-direction:column;align-items:center;padding-top:64px;}
+  .tabs {position:fixed;top:0;left:0;right:0;display:flex;justify-content:center;background:rgba(0,30,60,0.95);box-shadow:0 0 20px #00ccff;z-index:100;}
+  .tab-btn {flex:1;padding:14px;border:none;background:transparent;color:#fff;font-size:14px;font-weight:bold;cursor:pointer;text-transform:uppercase;transition:0.3s;}
+  .tab-btn:hover, .tab-btn.active {background:#003366;color:#00ccff;box-shadow:inset 0 0 10px #00ccff;}
+
+  .container {background:rgba(0,20,40,0.85);border-radius:20px;padding:30px;max-width:600px;width:90%;text-align:center;box-shadow:0 0 25px #00ccff,0 0 50px #0099ff;margin-bottom:40px;display:none;}
+  .container.active {display:block;animation:fadeIn 0.5s ease;}
+
+  h1 {color:#00ccff;text-shadow:0 0 15px #00ccff,0 0 30px #0099ff;margin-bottom:10px;}
+  p {margin:8px 0;color:#ccc;}
+  select,input,button {width:100%;padding:12px;margin:10px 0;border:none;border-radius:10px;font-size:16px;outline:none;transition:0.3s;}
+  select,input {background:rgba(0,40,80,0.8);color:#00ccff;box-shadow:0 0 10px #00ccff inset;}
+  select:hover,input:hover {box-shadow:0 0 15px #00ffff,0 0 25px #0099ff inset;}
+
+  .btn {background:linear-gradient(90deg,#004080,#0099ff,#00ccff);color:white;font-weight:bold;cursor:pointer;box-shadow:0 0 15px #00ccff;}
+  .btn:hover {background:linear-gradient(90deg,#00ccff,#0099ff,#004080);box-shadow:0 0 25px #00ffff;}
+  .btn-danger {background:linear-gradient(90deg,#330000,#660000,#990000);box-shadow:0 0 15px #ff0000;}
+  .btn-danger:hover {background:linear-gradient(90deg,#990000,#660000,#330000);box-shadow:0 0 25px #ff3333;}
+
+  .footer {margin:20px 0;font-size:12px;color:#aaa;text-align:center;}
+  .socials {position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:12px;}
+  .socials a {background:#fff;border-radius:50%;width:55px;height:55px;display:flex;justify-content:center;align-items:center;box-shadow:0 0 20px #00ccff;transition:0.3s;}
+  .socials a:hover {transform:scale(1.1);box-shadow:0 0 30px #00ffff;}
+  .socials img {width:30px;height:30px;}
+
+  #console {background:#000000; color:#0f0; text-align:left; height:300px; overflow-y:auto; padding:15px; border-radius:10px; font-family:monospace; display:none; margin-top:15px; box-shadow:0 0 15px #00ccff;}
+
+  @keyframes fadeIn {from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+  /* TRAFFIC PING */
+  #traffic-ping {
+    position:fixed;right:18px;bottom:110px;z-index:1200;
+    background:linear-gradient(180deg, rgba(0,38,70,0.96), rgba(0,20,40,0.92));
+    padding:10px 14px;border-radius:12px;
+    box-shadow:0 8px 26px rgba(0,204,255,0.06);
+    text-align:left;color:#dfefff;min-width:150px;
+  }
+  #traffic-ping .label {font-size:11px;text-transform:uppercase;color:#98e6ff;margin-bottom:6px;}
+  #traffic-ping .value-row {display:flex;align-items:center;justify-content:space-between;}
+  #traffic-ping .dots {display:flex;gap:6px;}
+  .dot {width:12px;height:12px;border-radius:50%;}
+  .green {background:#2ee07f;box-shadow:0 0 8px #2ee07f;animation: pulse 1.5s infinite;}
+  .blue {background:#00aaff;box-shadow:0 0 8px #00aaff;animation: pulse 1.5s infinite alternate;}
+  @keyframes pulse {0%{transform:scale(0.9);}50%{transform:scale(1.2);}100%{transform:scale(0.9);}}
+
+</style>
+</head>
+<body>
+<!-- LOGIN -->
+<div id="login-overlay">
+  <div id="login-box">
+    <h1>WHATSAPP UNBANNE TOOL</h1>
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="checkPassword()">Access</button>
+    <p id="error"></p>
+    <a href="https://whatsapp.com/channel/0029VbBVpuzHltY7Yk3GZU0o" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
+    </a>
+  </div>
+</div>
+
+<!-- MAIN PAGE -->
+<div id="main-page">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event,'unbanner')">WhatsApp Unbanner</button>
+  </div>
+
+  <div class="container active" id="unbanner">
+    <h1>WhatsApp Unbanner</h1>
+    <p>UNBANNER V30 LITE PRO 💀🔓</p>
+    <input type="text" id="phone" placeholder="Enter 10 digits number">
+    <button class="btn" onclick="unbanNumber()">🔓 Unban</button>
+    <button class="btn btn-danger" onclick="banNumber()">💀 Permanent Ban</button>
+    <div id="console"></div>
+  </div>
+
+  <div class="footer">© Pakistan 🇵🇰 XRAS BMS</div>
+  <div class="socials">
+    <a href="https://whatsapp.com/channel/0029VbBVpuzHltY7Yk3GZU0o" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"></a>
+    <a href="https://t.me/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg"></a>
+  </div>
+</div>
+
+<!-- TRAFFIC PING -->
+<div id="traffic-ping">
+  <div class="label">TRAFFIC PING</div>
+  <div class="value-row">
+    <div class="value" id="ping-value">-- ms</div>
+    <div class="dots"><div class="dot green"></div><div class="dot blue"></div></div>
+  </div>
+  <div class="status" id="ping-status">TRAFFIC</div>
+</div>
+
+<script>
+// LOGIN
+function checkPassword(){
+  const pwd=document.getElementById('password').value;
+  const error=document.getElementById('error');
+  if(pwd==="ELONSK7788"){
+    error.style.color="lime";error.innerHTML="✅ Welcome back, Boss!";
+    setTimeout(()=>{document.getElementById('login-overlay').style.display='none';document.getElementById('main-page').style.display='flex';},800);
+  }else{error.style.color="red";error.innerHTML="❌ Click WhatsApp icon to get password";}
+}
+// TAB
+function openTab(e,tabId){
+  document.querySelectorAll('.container').forEach(c=>c.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+}
+// UNBAN
+function unbanNumber(){
+  const phone=document.getElementById('phone').value;
+  if(!/^\d{10}$/.test(phone)){alert("Enter 10 digits number");return;}
+  const consoleDiv=document.getElementById('console');
+  consoleDiv.style.display="block";consoleDiv.innerHTML="";
+  let lines=[];
+  for(let i=1;i<=1000;i++){
+    lines.push("Injecting unban module ["+i+"]... Executing handshake with WhatsApp... HTTP 200 seed 🧪 ... Cleaning unofficial covers...");
+  }
+  let i=0;
+  const interval=setInterval(()=>{
+    consoleDiv.innerHTML+=lines[i]+'<br>';
+    consoleDiv.scrollTop=consoleDiv.scrollHeight;
+    i++;
+    if(i>=lines.length){clearInterval(interval);consoleDiv.innerHTML+="<br>✅ Done — Come back in 1 hour and log in.";}
+  },4000);
+}
+// BAN
+function banNumber(){
+  const phone=document.getElementById('phone').value;
+  if(!/^\d{10}$/.test(phone)){alert("Enter 10 digits number");return;}
+  const consoleDiv=document.getElementById('console');
+  consoleDiv.style.display="block";consoleDiv.innerHTML="";
+  let lines=[];
+  for(let i=1;i<=4000;i++){
+    lines.push("Executing permanent ban injection ["+i+"]... Injecting malware... Injecting killer ban payload...");
+  }
+  let i=0;
+  const interval=setInterval(()=>{
+    consoleDiv.innerHTML+=lines[i]+'<br>';
+    consoleDiv.scrollTop=consoleDiv.scrollHeight;
+    i++;
+    if(i>=lines.length){clearInterval(interval);consoleDiv.innerHTML+="<br>⚠️ Permanent ban complete.";}
+  },3000);
+}
+// PING
+(function initPing(){
+  const valueEl=document.getElementById('ping-value');const statusEl=document.getElementById('ping-status');
+  let ping=Math.floor(Math.random()*600)+1;
+  setInterval(()=>{
+    ping+=Math.floor(Math.random()*21)-10;if(ping<1)ping=1;if(ping>600)ping=600;
+    valueEl.textContent=ping+" ms";
+    statusEl.textContent=(ping<=50)?"TRAFFIC ON":"TRAFFIC";
+  },1000);
+})();
+</script>
+</body>
+</html>
